@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aflora Pole Studio | Onde a força encontra a graça</title>
+    <title>Aflora Pole Studio | Consciente, Acolhedor e Transformador</title>
     <!-- Bibliotecas de Estilo -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Montserrat:wght@200;300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --roxo-aflora: #5D1C8C;
+            --roxo-aflora: #5D1C8C; /* Roxo profundo da identidade */
             --preto-aflora: #0a0a0a;
             --branco-aflora: #ffffff;
         }
+
+        * { cursor: none !important; }
 
         body { 
             font-family: 'Montserrat', sans-serif; 
@@ -24,7 +26,29 @@
         
         .serif-style { font-family: 'Cinzel Decorative', serif; }
 
-        /* --- METODOLOGIA DO LOGO INICIAL (REDE DE ALTA RESOLUÇÃO 660x660) --- */
+        /* --- CURSOR PERSONALIZADO --- */
+        #custom-cursor {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--branco-aflora);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease-out, opacity 0.3s ease;
+        }
+        #cursor-follower {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--roxo-aflora);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.2s ease-out, background 0.3s ease;
+        }
+
+        /* --- LOGO INICIAL (660x660) --- */
         #intro-logo {
             position: fixed;
             z-index: 120;
@@ -33,266 +57,452 @@
             transform: translate(-50%, -50%);
             width: 660px;
             height: 660px;
-            max-width: 90vw; /* Segurança para telemóveis */
+            max-width: 90vw;
             max-height: 90vw;
             object-fit: contain;
             opacity: 0;
-            transition: all 2s cubic-bezier(0.7, 0, 0.3, 1);
+            transition: all 2.5s cubic-bezier(0.7, 0, 0.3, 1);
             pointer-events: none;
         }
+        #intro-logo.active { opacity: 1; }
+        #intro-logo.fade-out { opacity: 0; transform: translate(-50%, -50%) scale(0.9); filter: blur(30px); }
 
-        #intro-logo.active {
-            opacity: 1;
-        }
-
-        #intro-logo.fade-out {
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(0.9);
-            filter: blur(20px);
-        }
-
-        /* --- SELO CIRCULAR (REFINADO E COM COR) --- */
+        /* --- SELO CIRCULAR NO CANTO --- */
         #corner-seal {
             position: fixed;
             z-index: 100;
-            top: 30px;
-            left: 30px;
-            width: 70px;
-            height: 70px;
+            top: 40px;
+            left: 40px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            object-fit: cover;
             opacity: 0;
-            background-color: var(--roxo-aflora); /* Realização de cor */
+            background: var(--roxo-aflora);
             border: 2px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 20px rgba(93, 28, 140, 0.4);
-            transition: all 1.2s ease;
-            pointer-events: auto;
+            box-shadow: 0 0 30px rgba(93, 28, 140, 0.3);
+            transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+            transform: translateX(-150px) rotate(-90deg);
+            object-fit: cover;
         }
+        #corner-seal.visible { opacity: 1; transform: translateX(0) rotate(0deg); }
 
-        #corner-seal.visible {
-            opacity: 1;
-        }
-
-        @media (max-width: 768px) {
-            #corner-seal { width: 50px; height: 50px; top: 20px; left: 20px; }
-        }
-
-        /* --- MISTÉRIO: VÍDEO COMEÇA DESFOCADO --- */
+        /* --- VÍDEO HERO COM RUÍDO E FOCO --- */
         #hero-video {
-            filter: blur(20px) brightness(0.4);
-            transition: filter 3.5s ease-in-out;
+            filter: blur(25px) brightness(0.3) saturate(0.5);
+            transition: filter 3.5s ease-in-out, transform 10s linear;
+            will-change: filter, transform; 
         }
-        #hero-video.focused {
-            filter: blur(0px) brightness(0.6);
+        #hero-video.focused { 
+            filter: blur(0px) brightness(0.65) contrast(1.1) saturate(1.05); 
+            transform: scale(1.05); 
+        }
+        .film-grain {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 15;
+            opacity: 0.12; 
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        /* --- ASSINATURA INFERIOR (RESPEITO À PROFESSORA) --- */
+        /* --- NOME INFERIOR --- */
         #bottom-brand-footer {
             position: absolute;
-            bottom: 12%;
+            bottom: 10%;
             left: 50%;
             transform: translateX(-50%);
             z-index: 90;
             text-align: center;
-            width: 100%;
             opacity: 0;
-            transition: all 2s ease;
+            transition: all 2.5s ease;
         }
+        #bottom-brand-footer.visible { opacity: 0.9; transform: translateX(-50%) translateY(-20px); }
+
+        /* --- REVEAL E UTILITÁRIOS --- */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1.4s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .nav-glass { background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(20px); }
         
-        #bottom-brand-footer.visible {
-            opacity: 0.8;
-        }
-
-        /* --- REVELAÇÃO GERAL --- */
-        .reveal { 
-            opacity: 0; 
-            transform: translateY(30px); 
-            transition: all 1s ease-out; 
-        }
-        .reveal.active { 
-            opacity: 1; 
-            transform: translateY(0); 
-        }
-
-        .btn-aflora {
-            background-color: var(--roxo-aflora);
-            color: white;
-            transition: all 0.4s ease;
+        .btn-premium {
+            background: linear-gradient(135deg, var(--roxo-aflora) 0%, #3a0d5e 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
             text-transform: uppercase;
-            letter-spacing: 0.2em;
-            font-weight: 600;
-            font-size: 10px;
+            font-weight: bold;
+            color: white;
+            transition: all 0.5s ease;
         }
-        .btn-aflora:hover {
-            filter: brightness(1.2);
-            box-shadow: 0 0 30px rgba(93, 28, 140, 0.4);
+        .btn-premium::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: rotate(45deg);
+            transition: 0.6s;
+        }
+        .btn-premium:hover::after { left: 100%; top: 100%; }
+
+        /* Estilo do Cartão Branco Manifesto */
+        .manifesto-card {
+            background: #ffffff;
+            color: var(--roxo-aflora);
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 20;
         }
 
-        .nav-glass {
-            background: rgba(10, 10, 10, 0.7);
-            backdrop-filter: blur(10px);
-        }
+        .bg-roxo-profundo { background-color: var(--roxo-aflora); }
+        .texto-roxo { color: var(--roxo-aflora); }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- APRESENTAÇÃO INICIAL: LOGO 660x660 -->
+    <!-- CURSOR PERSONALIZADO -->
+    <div id="custom-cursor"></div>
+    <div id="cursor-follower"></div>
+
+    <!-- LOGO GIGANTE INICIAL -->
     <img id="intro-logo" src="logo.png" alt="Aflora Intro" onerror="this.style.display='none'">
 
-    <!-- SELO DEFINITIVO NO CANTO (CIRCULAR COM COR) -->
+    <!-- SELO REDONDO (CANTO) -->
     <img id="corner-seal" src="logo.png" alt="Selo Aflora" onerror="this.src='https://via.placeholder.com/150/5D1C8C/FFFFFF?text=A'">
 
+    <!-- WHATSAPP FLUTUANTE -->
+    <a href="https://wa.me/5521999999999" target="_blank" class="fixed bottom-8 right-8 z-[100] bg-[#25D366] p-4 rounded-full shadow-2xl hover:scale-110 transition-transform hover-target">
+        <svg width="28" height="28" fill="white" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.766-5.764-5.766zm3.392 8.221c-.142.399-.715.762-1.041.812-.297.047-.68.083-1.082-.047-.245-.08-1.058-.436-1.996-1.272-.731-.652-1.214-1.458-1.357-1.701-.143-.242-.015-.374.107-.496.11-.11.242-.286.363-.429.121-.143.161-.242.242-.404.082-.162.041-.303-.021-.429-.062-.126-.55-1.326-.754-1.815-.199-.475-.401-.41-.55-.417-.142-.007-.305-.008-.468-.008s-.427.062-.65.286c-.224.224-.854.835-.854 2.035 0 1.2.874 2.356.996 2.52s1.722 2.63 4.171 3.686c.582.251 1.036.401 1.391.514.585.186 1.117.16 1.538.098.469-.069 1.441-.588 1.644-1.155.204-.567.204-1.053.142-1.155-.061-.101-.224-.162-.468-.284z"/></svg>
+    </a>
+
     <!-- NAVEGAÇÃO -->
-    <nav id="navbar" class="fixed w-full z-40 transition-all duration-1000 flex justify-end items-center px-6 md:px-16 py-8 bg-transparent">
-        <button class="btn-aflora px-10 py-3 rounded-full shadow-xl opacity-0 transition-opacity duration-1000" id="nav-cta">
-            Agendar Aula
-        </button>
+    <nav id="navbar" class="fixed w-full z-40 transition-all duration-700 flex justify-between items-center px-8 md:px-24 py-8 bg-transparent">
+        <div class="opacity-0 w-20"></div>
+        <div class="hidden lg:flex space-x-12 text-[10px] tracking-[0.5em] uppercase opacity-60 font-bold">
+            <a href="#manifesto" class="hover:text-purple-400 transition-all hover-target">O Espaço</a>
+            <a href="#praticas" class="hover:text-purple-400 transition-all hover-target">Aulas</a>
+            <a href="#fundadora" class="hover:text-purple-400 transition-all hover-target">A Rêh</a>
+            <a href="#planos" class="hover:text-purple-400 transition-all hover-target">Planos</a>
+        </div>
+        <a href="https://wa.me/5521999999999" target="_blank" class="btn-premium px-8 py-3 rounded-full text-[9px] tracking-widest shadow-2xl opacity-0 transition-opacity duration-1000 hover-target" id="nav-cta">
+            Vem pro Aflora
+        </a>
     </nav>
 
-    <!-- HERO SECTION: FOCO NA PROFESSORA -->
+    <!-- HERO SECTION -->
     <header class="relative h-screen w-full flex items-center justify-center overflow-hidden bg-black">
         <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/95 z-10"></div>
+        <div class="film-grain"></div>
         
         <video id="hero-video" class="absolute inset-0 w-full h-full object-cover" autoplay muted loop playsinline>
             <source src="hero.mp4" type="video/mp4">
         </video>
         
-        <!-- ASSINATURA INFERIOR DO ESTÚDIO -->
-        <div id="bottom-brand-footer" class="px-6">
-            <h1 class="text-4xl md:text-[8rem] tracking-[0.25em] uppercase leading-none serif-style opacity-95 drop-shadow-2xl">
-                AFLORA
+        <!-- NOME INFERIOR E ELEGANTE -->
+        <div id="bottom-brand-footer" class="px-6 flex flex-col items-center">
+            <h1 class="text-4xl md:text-[8rem] font-light tracking-[0.2em] uppercase leading-none serif-style opacity-95">
+                CONHEÇA O
             </h1>
-            <p class="text-[9px] md:text-sm tracking-[1.1em] uppercase opacity-40 mt-4 font-medium">Pole Studio</p>
-        </div>
-
-        <!-- Indicador de Descida Sutil -->
-        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 opacity-20 animate-bounce">
-            <div class="w-[1px] h-10 bg-white"></div>
+            <h2 class="text-6xl md:text-[11rem] tracking-[0.1em] uppercase leading-none serif-style opacity-100 mt-2 md:-mt-8">
+                AFLORA
+            </h2>
         </div>
     </header>
 
-    <!-- MANIFESTO -->
-    <section id="manifesto" class="min-h-screen flex flex-col items-center justify-center px-6 py-32 text-center bg-black">
-        <div class="max-w-5xl space-y-16 reveal">
-            <span class="text-[10px] tracking-[0.8em] uppercase opacity-30 font-bold" style="color: var(--roxo-aflora);">Essência</span>
-            <h2 class="text-5xl md:text-8xl font-light leading-[1.1] tracking-tight serif-style text-white">
-                Onde a força encontra a <span class="italic font-normal" style="color: var(--roxo-aflora);">graça</span>.
-            </h2>
-            <div class="w-24 h-[1px] mx-auto bg-white/10"></div>
-            <p class="text-xl md:text-2xl font-light opacity-60 leading-relaxed italic max-w-3xl mx-auto">
-                "A magia do pole está no equilíbrio entre o mistério do movimento e a clareza da sua própria força."
+    <!-- O MANIFESTO (CARTÃO BRANCO COMO NA IMAGEM) -->
+    <section id="manifesto" class="relative py-40 px-6 flex items-center justify-center overflow-hidden">
+        <!-- Fundo roxo com brilho para destacar o cartão branco -->
+        <div class="absolute inset-0 bg-roxo-profundo opacity-20"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black z-10"></div>
+        
+        <div class="reveal manifesto-card p-12 md:p-20 max-w-4xl w-full text-center space-y-10">
+            <!-- Ícone de Folha Minimalista -->
+            <svg class="w-12 h-12 mx-auto texto-roxo opacity-80" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21.5V11m0 0c-3-3-7-3-7-3s0 4 3 7c2 2 4 2 4 2zm0 0c3-3 7-3 7-3s0 4-3 7c-2 2-4 2-4 2z"/>
+            </svg>
+            
+            <p class="text-lg md:text-2xl font-light leading-relaxed">
+                O Aflora é um espaço de acolhimento.<br/>
+                Um <strong class="font-bold">porto seguro</strong> onde mulheres exploram sua potência através da dança e do pole.
+            </p>
+            <div class="w-16 h-[1px] bg-[#5D1C8C] opacity-20 mx-auto"></div>
+            <p class="text-lg md:text-2xl font-light leading-relaxed">
+                Aqui, o foco é <strong class="font-bold">autoestima, bem-estar e consciência corporal</strong>, tornando a atividade física algo leve, prazeroso e possível — respeitando limites, histórias e processos.
             </p>
         </div>
     </section>
 
-    <!-- PRÁTICAS -->
-    <section id="praticas" class="bg-[#050505] py-40 px-6">
+    <!-- METODOLOGIA E PRÁTICAS -->
+    <section id="praticas" class="bg-[#050505] py-40 px-6 border-t border-white/5">
         <div class="max-w-7xl mx-auto space-y-24">
-            <div class="flex flex-col md:flex-row justify-between items-end reveal">
-                <div class="space-y-4">
-                    <span class="text-[11px] tracking-[0.6em] uppercase font-bold" style="color: var(--roxo-aflora);">As nossas</span>
-                    <h2 class="text-6xl md:text-8xl font-light tracking-[0.15em] uppercase serif-style">Práticas</h2>
-                </div>
+            
+            <div class="text-center reveal space-y-6">
+                <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tight">
+                    NO AFLORA, VOCÊ ENCONTRA:
+                </h2>
+                <div class="w-24 h-[3px] bg-roxo-profundo mx-auto mt-6"></div>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-12">
-                <div class="reveal group space-y-10 p-6 border border-white/5 bg-white/[0.01] hover:bg-white/[0.02] transition-all duration-700">
-                    <div class="aspect-[9/16] overflow-hidden shadow-2xl rounded-sm">
-                        <video class="w-full h-full object-cover filter grayscale brightness-50 group-hover:grayscale-0 group-hover:brightness-90 transition-all duration-1000" autoplay muted loop playsinline>
-                            <source src="acro.mp4" type="video/mp4">
-                        </video>
-                    </div>
-                    <h4 class="text-2xl tracking-[0.3em] uppercase serif-style text-center">Pole Acro</h4>
-                </div>
-                <div class="reveal group space-y-10 p-6 border border-white/5 bg-white/[0.01] hover:bg-white/[0.02] transition-all duration-700">
-                    <div class="aspect-[9/16] overflow-hidden shadow-2xl rounded-sm">
-                        <video class="w-full h-full object-cover filter grayscale brightness-50 group-hover:grayscale-0 group-hover:brightness-90 transition-all duration-1000" autoplay muted loop playsinline>
-                            <source src="compartilhado.mp4" type="video/mp4">
-                        </video>
-                    </div>
-                    <h4 class="text-2xl tracking-[0.3em] uppercase serif-style text-center">Compartilhado</h4>
-                </div>
-                <div class="reveal group space-y-10 p-6 border border-white/5 bg-white/[0.01] hover:bg-white/[0.02] transition-all duration-700">
-                    <div class="aspect-[9/16] overflow-hidden shadow-2xl rounded-sm">
-                        <video class="w-full h-full object-cover filter grayscale brightness-50 group-hover:grayscale-0 group-hover:brightness-90 transition-all duration-1000" autoplay muted loop playsinline>
+            <!-- Destaque: Acompanhamento Pessoal (Vídeo da Rê ensinando) -->
+            <div class="reveal bg-white/[0.03] border border-white/10 p-10 md:p-16 rounded-3xl text-center max-w-5xl mx-auto hover:bg-white/[0.05] transition-all hover-target">
+                <svg class="w-8 h-8 mx-auto mb-6 text-white opacity-50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                <p class="text-xl md:text-3xl font-light leading-relaxed">
+                    Acreditamos que <strong class="font-bold">cada jornada é única.</strong><br/>
+                    Por isso, o Aflora investe em <strong class="font-bold">acompanhamento pessoal de verdade.</strong>
+                </p>
+                <p class="text-base md:text-xl font-light leading-relaxed mt-6 opacity-70">
+                    Desafiamos o corpo com responsabilidade, respeitando sua trajetória, seu ritmo e <strong class="text-white font-bold">seu momento.</strong>
+                </p>
+            </div>
+
+            <!-- Grid de Aulas -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-12 pt-10">
+                <!-- Particulares -->
+                <div class="reveal space-y-8 p-8 border border-white/5 bg-black hover:border-[#5D1C8C] transition-all duration-500 rounded-2xl hover-target">
+                    <div class="aspect-video overflow-hidden rounded-xl">
+                        <video class="w-full h-full object-cover opacity-60 hover:opacity-100 transition-all duration-700" autoplay muted loop playsinline>
                             <source src="particular.mp4" type="video/mp4">
                         </video>
                     </div>
-                    <h4 class="text-2xl tracking-[0.3em] uppercase serif-style text-center">Particular</h4>
+                    <div class="text-center space-y-4">
+                        <h4 class="text-2xl font-bold tracking-wide">Aulas Particulares de Pole</h4>
+                        <p class="text-sm font-light opacity-80 leading-relaxed">Explorando diversas vertentes, com foco na dança e no pole acrobático.</p>
+                    </div>
+                </div>
+
+                <!-- Compartilhado -->
+                <div class="reveal space-y-8 p-8 border border-white/5 bg-black hover:border-[#5D1C8C] transition-all duration-500 rounded-2xl hover-target">
+                    <div class="aspect-video overflow-hidden rounded-xl">
+                        <video class="w-full h-full object-cover opacity-60 hover:opacity-100 transition-all duration-700" autoplay muted loop playsinline>
+                            <source src="compartilhado.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="text-center space-y-4">
+                        <h4 class="text-2xl font-bold tracking-wide">Pole Compartilhado</h4>
+                        <p class="text-xs font-bold opacity-50 uppercase tracking-widest">(Aulas em Dupla)</p>
+                        <p class="text-sm font-light opacity-80 leading-relaxed">Para quem quer se desenvolver junto, trocar apoio e incentivo — sem perder o cuidado e a atenção individual.</p>
+                    </div>
+                </div>
+
+                <!-- Pole Acro (Extra baseado no site anterior para manter 3 cards, se desejar) -->
+                <div class="reveal space-y-8 p-8 border border-white/5 bg-black hover:border-[#5D1C8C] transition-all duration-500 rounded-2xl hover-target">
+                    <div class="aspect-video overflow-hidden rounded-xl">
+                        <video class="w-full h-full object-cover opacity-60 hover:opacity-100 transition-all duration-700" autoplay muted loop playsinline>
+                            <source src="acro.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="text-center space-y-4">
+                        <h4 class="text-2xl font-bold tracking-wide">Pole Acrobático</h4>
+                        <p class="text-sm font-light opacity-80 leading-relaxed">Técnica e dinâmica em cada transição para figuras no ar com fluidez.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FUNDADORA -->
-    <section id="fundadora" class="min-h-screen bg-black flex items-center justify-center py-48 px-6 overflow-hidden">
-        <div class="grid md:grid-cols-2 gap-24 items-center max-w-7xl w-full">
-            <div class="reveal relative group">
-                <div class="relative z-20 overflow-hidden shadow-2xl border border-white/10">
-                    <video class="aspect-[4/5] w-full object-cover grayscale brightness-50 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-[2000ms]" autoplay muted loop playsinline>
-                        <source src="re.mp4" type="video/mp4">
-                    </video>
+    <!-- FUNDADORA (A RÊH) -->
+    <section id="fundadora" class="min-h-screen relative flex items-center justify-center py-40 px-6 overflow-hidden">
+        <!-- Fundo de Imagem/Vídeo como na referência -->
+        <div class="absolute inset-0 z-0">
+            <video class="w-full h-full object-cover opacity-30 blur-sm" autoplay muted loop playsinline>
+                <source src="re.mp4" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
+        </div>
+
+        <div class="max-w-6xl w-full z-10 grid md:grid-cols-2 gap-20 items-center">
+            <div class="reveal space-y-10 text-left">
+                <h2 class="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-tight">
+                    EU SOU A RÊH CAVALCANTE
+                </h2>
+                
+                <div class="space-y-8 text-xl md:text-3xl font-light leading-relaxed opacity-90">
+                    <p>Professora de pole e fundadora do Aflora.</p>
+                    <p>Ensino pole de forma humana e consciente, ajudando mulheres a se reconectarem com seus corpos, sua força e sua história.</p>
                 </div>
-                <div class="absolute -bottom-8 -left-8 w-32 h-32 border-l-[1px] border-b-[1px] z-10" style="border-color: var(--roxo-aflora);"></div>
             </div>
-            <div class="reveal space-y-12">
-                <div class="space-y-4">
-                    <h3 class="text-[10px] tracking-[0.8em] uppercase opacity-30 font-bold">Fundadora</h3>
-                    <h2 class="text-6xl md:text-8xl font-light tracking-wider serif-style uppercase leading-[0.9]">Rê <br/> <span style="color: var(--roxo-aflora);">Cavalcante</span></h2>
+            
+            <div class="reveal hidden md:block">
+                <!-- Espaço vazio para deixar o vídeo de fundo brilhar na direita -->
+            </div>
+        </div>
+    </section>
+
+    <!-- HORÁRIOS & AGENDAMENTO -->
+    <section class="bg-roxo-profundo text-white py-32 px-6">
+        <div class="max-w-4xl mx-auto space-y-16 reveal">
+            <h2 class="text-5xl md:text-7xl font-black text-center uppercase tracking-tighter leading-none">
+                HORÁRIOS &<br/>AGENDAMENTO
+            </h2>
+            
+            <p class="text-xl md:text-2xl font-light text-center">
+                A <strong class="font-bold">flexibilidade</strong> faz parte do método.
+            </p>
+
+            <div class="space-y-8 bg-white/[0.05] p-10 rounded-3xl border border-white/10 backdrop-blur-sm shadow-2xl">
+                <div class="flex items-start space-x-6 text-lg md:text-xl font-light">
+                    <span class="text-2xl mt-1">✔️</span>
+                    <p>Horário fixo ou agendamento conforme sua rotina</p>
                 </div>
-                <p class="text-xl md:text-2xl font-light leading-relaxed opacity-50 tracking-wide italic">
-                    "A dança é o portal para a descoberta da força que existe em cada mulher."
-                </p>
-                <div class="flex items-center space-x-6 text-[11px] tracking-[0.4em] uppercase font-bold opacity-80">
-                    <div class="w-12 h-[1px]" style="background-color: var(--roxo-aflora);"></div>
-                    <span>Consciência Corporal</span>
+                <div class="flex items-start space-x-6 text-lg md:text-xl font-light">
+                    <span class="text-2xl mt-1">✔️</span>
+                    <p>Atendimentos nos três turnos</p>
                 </div>
+                <div class="flex items-start space-x-6 text-lg md:text-xl font-light">
+                    <span class="text-2xl mt-1">✔️</span>
+                    <p>Agendamento feito diretamente pelo WhatsApp</p>
+                </div>
+            </div>
+
+            <p class="text-xl md:text-2xl font-light text-center pt-8 italic">
+                Aqui, o pole se adapta à sua vida — não o contrário.
+            </p>
+        </div>
+    </section>
+
+    <!-- PLANOS E FREQUÊNCIA (SPLIT DESIGN) -->
+    <section id="planos" class="flex flex-col lg:flex-row min-h-screen bg-black">
+        <!-- Lado Esquerdo (Vídeo) -->
+        <div class="lg:w-1/2 relative h-[50vh] lg:h-auto overflow-hidden">
+            <video class="absolute inset-0 w-full h-full object-cover opacity-60" autoplay muted loop playsinline>
+                <source src="particular.mp4" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent lg:hidden"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent to-roxo-profundo opacity-40 hidden lg:block"></div>
+        </div>
+
+        <!-- Lado Direito (Textos em Roxo) -->
+        <div class="lg:w-1/2 bg-roxo-profundo p-12 md:p-24 flex flex-col justify-center reveal">
+            <h2 class="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-10">
+                PLANOS &<br/>FREQUÊNCIA
+            </h2>
+            
+            <p class="text-xl font-light mb-16">
+                Você pode treinar <strong class="font-bold">1 ou 2 vezes por semana</strong>, de acordo com seu objetivo:
+            </p>
+
+            <div class="space-y-16">
+                <div class="space-y-4 hover-target cursor-default">
+                    <h3 class="text-2xl font-bold tracking-wide">Planos Standard</h3>
+                    <p class="text-sm font-bold uppercase tracking-widest opacity-60">(Mensal ou Trimestral – 1x/semana)</p>
+                    <p class="text-lg font-light leading-relaxed">Ideais para quem está começando ou quer uma atividade prazerosa e consistente.</p>
+                </div>
+
+                <div class="space-y-4 hover-target cursor-default">
+                    <h3 class="text-2xl font-bold tracking-wide">Planos Evolução / Jornada Turbinada</h3>
+                    <p class="text-sm font-bold uppercase tracking-widest opacity-60">(2x/semana)</p>
+                    <p class="text-lg font-light leading-relaxed">Para quem tem sede de evolução e quer desenvolver habilidades com mais prática e continuidade.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CALL TO ACTION FINAL -->
+    <section class="bg-black py-40 px-6 text-center border-t border-white/5 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-roxo-profundo opacity-20 pointer-events-none"></div>
+        
+        <div class="max-w-4xl mx-auto space-y-16 reveal relative z-10">
+            <h2 class="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-tight">
+                AGENDE SUA AULA<br/>EXPERIMENTAL
+            </h2>
+            
+            <p class="text-2xl md:text-4xl font-light leading-relaxed">
+                E venha viver o pole como ele pode (e deve) ser:
+            </p>
+            <p class="text-3xl md:text-5xl font-bold texto-roxo uppercase tracking-wider">
+                consciente, acolhedor e transformador.
+            </p>
+
+            <div class="pt-16">
+                <a href="https://wa.me/5521999999999" target="_blank" class="inline-block btn-premium px-12 py-5 rounded-full text-sm md:text-lg hover-target">
+                    Comenta com 🌸 e vamos conversar
+                </a>
             </div>
         </div>
     </section>
 
     <!-- RODAPÉ -->
-    <footer class="bg-black py-32 px-10 text-center space-y-20 border-t border-white/5 relative">
-        <div class="text-5xl md:text-7xl font-light tracking-[0.8em] uppercase opacity-20 serif-style ml-[0.8em]">AFLORA</div>
-        <div class="pt-24 text-[9px] tracking-[0.6em] uppercase opacity-10 font-bold">
-            Maricá, Rio de Janeiro • Aflora Pole Studio © 2026
+    <footer class="bg-black py-20 px-10 text-center border-t border-white/10 relative">
+        <div class="flex flex-col items-center space-y-6">
+            <div class="text-4xl font-light tracking-[0.8em] uppercase opacity-30 serif-style ml-[0.8em]">AFLORA</div>
+            <div class="text-[9px] tracking-[0.6em] uppercase opacity-20 font-bold">
+                Maricá, Rio de Janeiro • 2026
+            </div>
         </div>
     </footer>
 
     <script>
-        // --- METODOLOGIA DE INTRODUÇÃO E FOCO ---
+        // --- CURSOR MAGNÉTICO ---
+        const cursor = document.getElementById('custom-cursor');
+        const follower = document.getElementById('cursor-follower');
+        const hoverTargets = document.querySelectorAll('.hover-target, a, button');
+
+        if (window.matchMedia("(pointer: fine)").matches) {
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+                follower.style.transform = `translate(${e.clientX - 15}px, ${e.clientY - 15}px)`;
+            });
+
+            hoverTargets.forEach(target => {
+                target.addEventListener('mouseenter', () => {
+                    cursor.style.transform += ' scale(4)';
+                    cursor.style.opacity = '0.2';
+                    follower.style.transform += ' scale(1.5)';
+                    follower.style.background = 'rgba(93, 28, 140, 0.2)';
+                    follower.style.borderColor = 'transparent';
+                });
+                target.addEventListener('mouseleave', () => {
+                    cursor.style.opacity = '1';
+                    follower.style.background = 'transparent';
+                    follower.style.borderColor = 'var(--roxo-aflora)';
+                });
+            });
+        }
+
+        // --- LÓGICA DE INTRODUÇÃO E MISTÉRIO ---
         window.addEventListener('load', () => {
             const introLogo = document.getElementById('intro-logo');
             const seal = document.getElementById('corner-seal');
             const heroText = document.getElementById('bottom-brand-footer');
             const heroVid = document.getElementById('hero-video');
             const navBtn = document.getElementById('nav-cta');
+            const navbar = document.getElementById('navbar');
             
-            // 1. Apresenta o logo 660x660 em alta resolução
-            setTimeout(() => {
-                introLogo.classList.add('active');
-            }, 300);
+            setTimeout(() => introLogo.classList.add('active'), 200);
 
-            // 2. Transição: logo central some, vídeo foca, assinatura inferior surge, selo no canto ativa
             setTimeout(() => {
                 introLogo.classList.add('fade-out');
                 heroVid.classList.add('focused');
                 heroText.classList.add('visible');
                 seal.classList.add('visible');
-                navBtn.classList.replace('opacity-0', 'opacity-100');
-            }, 3200);
+                if(navBtn) navBtn.classList.replace('opacity-0', 'opacity-100');
+                navbar.classList.add('nav-glass');
+            }, 3000);
         });
 
-        // Scroll Reveal
+        // --- REVELAÇÃO NO SCROLL ---
         const reveals = document.querySelectorAll('.reveal');
         function handleReveal() {
             reveals.forEach(el => {
                 const rect = el.getBoundingClientRect();
-                if (rect.top < window.innerHeight * 0.9) { el.classList.add('active'); }
+                if (rect.top < window.innerHeight * 0.85) { el.classList.add('active'); }
             });
         }
         window.addEventListener('scroll', handleReveal);
         handleReveal(); 
+
+        // --- HIDE NAV ON SCROLL ---
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            const navbar = document.getElementById('navbar');
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                navbar.style.transform = 'translateY(-100%)';
+            } else {
+                navbar.style.transform = 'translateY(0)';
+            }
+            lastScroll = currentScroll;
+        });
     </script>
 </body>
 </html>
